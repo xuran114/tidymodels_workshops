@@ -40,3 +40,9 @@ vignettes/*.pdf
 
 /.quarto/
 .DS_Store
+*.js
+*.css
+*.woff
+*.png
+*.html
+classwork/03-classwork.rmarkdown

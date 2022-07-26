@@ -103,7 +103,21 @@ Notice the evidence of overfitting! ⚠️
 # Your code here!
 
 # Use `augment()` and `metrics()` with `tree_fit`
-tree_fit
+tree_fit %>% 
+  augment(frog_train) %>% 
+  mae(latency, .pred)
+
+tree_fit %>% 
+  augment(frog_test) %>% 
+  mae(latency, .pred)
+
+tree_fit %>% 
+  augment(frog_train) %>% 
+  rsq(latency, .pred)
+
+tree_fit %>% 
+  augment(frog_test) %>% 
+  rsq(latency, .pred)
 ```
 
 ## Your turn
@@ -201,7 +215,9 @@ Don't forget to set a seed when you resample!
 
 ```{r}
 # Your code here!
-
+set.seed(3214)
+bootstraps(frog_train, times = 10)
+validation_split(frog_train)
 ```
 
 ## Create a random forest model
@@ -226,6 +242,16 @@ Use `fit_resamples()` and `rf_wflow` to:
 
 ```{r}
 # Your code here!
+rf_res <- fit_resamples(rf_wflow, frog_folds, metrics = metric_set(rmse, mae, rsq), control = ctrl_frog)
+rf_res %>% collect_metrics()
+
+rf_preds <- collect_predictions(rf_res)
+rf_preds
+
+rf_preds %>% ggplot(aes(latency, .pred, color = id)) + 
+  geom_abline(lty = 2, col = "gray", size = 1.5) +
+  geom_point(alpha = 0.5) +
+  coord_obs_pred()
 
 ```
 
@@ -248,6 +274,9 @@ Rank the sets of models by their aggregate metric performance
 ```{r}
 wf_set_fit %>%
   rank_results()
+
+wf_set_fit %>%
+  rank_results(rank_metric = "rsq")
 ```
 
 ## Your turn

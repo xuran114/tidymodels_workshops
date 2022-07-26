@@ -56,11 +56,11 @@ decision_tree() %>%
 
 Edit the chunk below to use a different model!
 
-```{r tree_spec}
-tree_spec <- decision_tree() %>% 
+```{r lm_spec}
+lm_spec <- linear_reg() %>% 
   set_mode("regression")
 
-tree_spec
+lm_spec
 ```
 
 ## A model workflow
@@ -114,7 +114,11 @@ Now use a similar approach to fit a linear model! Call it `lm_wflow`.
 
 ```{r}
 ### Your code here
+lm_wflow <- workflow() %>%
+  add_formula(latency ~ .) %>%
+  add_model(lm_spec)
 
+lm_wflow
 ```
 
 ## Predict with your model
@@ -151,8 +155,8 @@ augment(tree_fit, new_data = frog_test)
 library(rpart.plot)
 
 tree_fit %>%
-  extract_fit_engine() %>%
-  rpart.plot(roundint = FALSE)
+  extract_fit_engine() #%>%
+  #rpart.plot(roundint = FALSE)
 ```
 
 ## Your turn
